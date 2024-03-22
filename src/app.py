@@ -1,8 +1,13 @@
+import os
 from flask import Flask, request, render_template
+from dotenv import load_dotenv
 
 # defined imports
 from routes.predict_genre import predict
 from routes.train_model import train
+
+# Load environment variables from .env file
+load_dotenv('../.env')
 
 # Application code-------------------
 app = Flask(__name__)
