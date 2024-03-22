@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>248201V|Song Genre Predictor</title>
+  </head>
+
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
+
+  <body>
+    <section class="container">
+      <h1>Song Genre Predictor</h1>
+
+      <form action="/predict" method="post">
+        <textarea
+          id="lyrics"
+          name="lyrics"
+          rows="10"
+          cols="50"
+          placeholder="Enter the lyrics of the song here..."
+        ></textarea>
+        <button type="submit">Predict</button>
+      </form>
+    </section>
+  </body>
+
+  {% include 'footer.html' %}
+</html>
