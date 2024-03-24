@@ -12,7 +12,7 @@ from pyspark.ml import Pipeline
 from pyspark.ml.classification import LogisticRegression 
 
 # Importing the evaluator 
-from pyspark.ml.evaluation import BinaryClassificationEvaluator
+from pyspark.ml.evaluation import MultilabelClassificationEvaluator
 
 def train():
     try:
@@ -88,22 +88,23 @@ def train():
 
         # Vectorizing the data into a new column "features" 
         # which will be our input/features class 
-        assembler = VectorAssembler(inputCols=['artist_nameVec',
-            'track_nameVec',
-            'release_date',
-            'GenreVec',
-            'LyricsVec',
-            'len',
-            'dating',
-            'violence',
-            'world/life',
-            'night/time',
-            'shake the audience',
-            'family/gospel',
-            'romantic',
-            'communication',
-            'obscene',
-            'music',
+        assembler = VectorAssembler(
+            inputCols=['artist_nameVec',
+                'track_nameVec',
+                'release_date',
+                'GenreVec',
+                'LyricsVec',
+                'len',
+                'dating',
+                'violence',
+                'world/life',
+                'night/time',
+                'shake the audience',
+                'family/gospel',
+                'romantic',
+                'communication',
+                'obscene',
+                'music',
                 'movement/places',
                 'light/visual perceptions',
                 'family/spiritual',
@@ -117,10 +118,11 @@ def train():
                 'valence',
                 'energy',
                 'topicVec',
-                'age'], outputCol='features') 
+                'age'], 
+            outputCol='features') 
         
         log_reg = LogisticRegression(featuresCol='features', 
-                                labelCol='GenreIndex') 
+                                labelCol='GenreIndex', family='multinomial') 
 
         # Creating the pipeline 
         pipe = Pipeline(stages=[genreIdx, lyricsIdx, artist_nameIdx, track_nameIdx, topicIdx,
@@ -150,7 +152,7 @@ def train():
         results = fit_model.transform(test_data) 
         
         # Calling the evaluator 
-        evaluator = BinaryClassificationEvaluator(rawPredictionCol='prediction',labelCol='GenreIndex') 
+        evaluator = MultilabelClassificationEvaluator(rawPredictionCol='prediction',labelCol='GenreIndex') 
 
         # Evaluating the AUC on results 
         ROC_AUC = evaluator.evaluate(results) 

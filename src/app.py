@@ -3,14 +3,17 @@ from flask import Flask, request, render_template
 from dotenv import load_dotenv
 
 # defined imports
-from routes.predict_genre import predict
-from routes.train_model import train
+from .routes.predict_genre import predict
+from .routes.train_model import train
 
 # Load environment variables from .env file
 load_dotenv('../.env')
 
 # Application code-------------------
 app = Flask(__name__)
+app.config['ENV'] = os.getenv('FLASK_ENV', 'production')
+if app.config['ENV'] == 'development':
+    app.config['DEBUG'] = True
 
 # Endpoint definitions
 @app.route('/')
@@ -33,5 +36,6 @@ def predict_genre_from_lyrics():
     return render_template('prediction_results.html', **template_vars)
 
 # Start server
-app.run(debug=app.config['DEBUG'])
+if __name__ == '__main__':
+    app.run(debug=app.config['DEBUG'])
 
