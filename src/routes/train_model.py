@@ -152,7 +152,7 @@ def train():
         results = fit_model.transform(test_data) 
         
         # Calling the evaluator 
-        evaluator = MultilabelClassificationEvaluator(rawPredictionCol='prediction',labelCol='GenreIndex') 
+        evaluator = MultilabelClassificationEvaluator(labelCol='GenreIndex') 
 
         # Evaluating the AUC on results 
         ROC_AUC = evaluator.evaluate(results) 
