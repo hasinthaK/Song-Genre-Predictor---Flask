@@ -1,0 +1,1 @@
+{"class":"org.apache.spark.ml.feature.OneHotEncoderModel","timestamp":1711261819059,"sparkVersion":"3.5.1","uid":"OneHotEncoder_a8da3888fc2b","paramMap":{"outputCol":"LyricsVec","inputCol":"LyricsIndex"},"defaultParamMap":{"dropLast":true,"handleInvalid":"error","outputCol":"OneHotEncoder_a8da3888fc2b__output"}}

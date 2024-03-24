@@ -1,1 +1,0 @@
-{"class":"org.apache.spark.ml.feature.StringIndexerModel","timestamp":1711197174747,"sparkVersion":"3.5.1","uid":"StringIndexer_c5c9deec650e","paramMap":{"outputCol":"LyricsIndex","inputCol":"lyrics","handleInvalid":"keep"},"defaultParamMap":{"outputCol":"StringIndexer_c5c9deec650e__output","handleInvalid":"error","stringOrderType":"frequencyDesc"}}
