@@ -6,6 +6,6 @@ if [ ! -d "venv" ]; then
 else
     source venv/bin/activate
 fi
-python -m src.app &
+flask run &
 sleep 2
 xdg-open http://localhost:5000

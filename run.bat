@@ -13,8 +13,8 @@ IF NOT EXIST venv (
 )
 
 @REM Run the application in another terminal
-start "Flask App" cmd /k python -m src.app
-@REM start "Flask App" cmd /k flask run
+@REM start "Flask App" cmd /k python -m src.app
+start "Flask App" cmd /k flask run
 
 @REM Open the application in the browser
 start http://localhost:5000
