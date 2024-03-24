@@ -13,6 +13,9 @@ def predict(lyrics: str):
         # Initialize Spark session
         spark = SparkSession.builder.appName('MusicLyricsPredictor').getOrCreate()
         
+        # spark_log_level = 'DEBUG' if os.getenv('FLASK_ENV') == 'development' else 'WARN'
+        # spark.sparkContext.setLogLevel(spark_log_level)
+        
         # Create a DataFrame with the input lyrics (assuming 'lyrics' is the column expected by the model)
         df = spark.createDataFrame([(lyrics,)], ['lyrics'])
 
@@ -25,7 +28,7 @@ def predict(lyrics: str):
         genre_mapping = json.load(genre_mapping_json)
         predicted_genre = genre_mapping.get(predicted_genre_index, "Unknown Genre")
         
-        genre_mapping.close()
+        genre_mapping_json.close()
 
         return predicted_genre
     except Exception as e:

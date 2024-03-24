@@ -4,7 +4,7 @@ import json
 # Starting the Spark Session 
 from pyspark.sql import SparkSession 
 
-    # Importing the required libraries 
+# Importing the required libraries 
 from pyspark.ml.feature import VectorAssembler, StringIndexer, OneHotEncoder 
 
 # Importing Pipeline and Model 
@@ -17,6 +17,10 @@ from pyspark.ml.evaluation import MulticlassClassificationEvaluator
 def train():
     try:
         spark = SparkSession.builder.appName('MusicLyricsModel').getOrCreate() 
+        
+        # spark_log_level = 'DEBUG' if os.getenv('FLASK_ENV') == 'development' else 'WARN'
+        # spark.sparkContext.setLogLevel(spark_log_level)
+        
         training_csv_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), os.path.join(os.getenv('TRAIN_DATA_DIR'), os.getenv('TRAIN_DATA_CSV')))
         # Reading the data 
         df = spark.read.option("maxRowsInMemory", 1000000).csv(training_csv_path, inferSchema=True, header=True) 
@@ -89,7 +93,8 @@ def train():
         # Vectorizing the data into a new column "features" 
         # which will be our input/features class 
         assembler = VectorAssembler(
-            inputCols=['artist_nameVec',
+            inputCols=[
+                'artist_nameVec',
                 'track_nameVec',
                 'release_date',
                 'GenreVec',
@@ -118,16 +123,28 @@ def train():
                 'valence',
                 'energy',
                 'topicVec',
-                'age'], 
+                'age'
+                ], 
             outputCol='features') 
         
         log_reg = LogisticRegression(featuresCol='features', 
                                 labelCol='GenreIndex', family='multinomial') 
 
         # Creating the pipeline 
-        pipe = Pipeline(stages=[genreIdx, lyricsIdx, artist_nameIdx, track_nameIdx, topicIdx,
-                                    genreEncode, lyricsEncode, artist_nameEncode, track_nameEncode, topicEncode, 
-                                    assembler, log_reg]) 
+        pipe = Pipeline(stages=[
+                            genreIdx, 
+                            lyricsIdx, 
+                            artist_nameIdx,
+                            track_nameIdx,
+                            topicIdx,
+                            genreEncode,
+                            lyricsEncode,
+                            artist_nameEncode,
+                            track_nameEncode,
+                            topicEncode,
+                            assembler,
+                            log_reg
+                                     ])
         
         # Splitting the data into train and test 
         train_data, test_data = result.randomSplit([0.8, .2]) 
