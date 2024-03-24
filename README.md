@@ -9,6 +9,20 @@ A simple Flask application with few API routes to get a prediction of song genre
 |--------------------|---------|
 | Abeykoon A.M.K.H.K | 248201V |
 
+## Running the application
+
+1. Run the `run.bat` or `run.sh` script to start the application.
+
+OR
+
+1. Initialize the environment manually
+    a. Install the requirements using pip
+        ```
+        pip install -r requirements.txt
+        ```
+2. Run `flask run` within the application root directory.
+3. Open a web browser and navigate to `http://localhost:5000` to view the application.
+
 ---
 
 ## Software Specs
