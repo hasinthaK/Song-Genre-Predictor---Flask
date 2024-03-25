@@ -1,35 +1,41 @@
 import os
-import json
+import numpy as np
 
-from pyspark.ml import PipelineModel
 from pyspark.sql import SparkSession
+from pyspark.ml import PipelineModel
+from pyspark.ml.feature import Tokenizer, HashingTF, IDF
+
+# Initialize Spark session
+spark = SparkSession.builder.appName('MusicLyricsPredictor').getOrCreate()
+
+# Function to classify lyrics
+def classify_lyrics(lyrics):
+    # Load the model using Spark's load method
+    model_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), os.path.join(os.getenv('MODEL_DIR'), os.getenv('MODEL_FILE')))
+    model = PipelineModel.load(model_path)
+
+    # Tokenize lyrics
+    tokenizer = Tokenizer(inputCol="lyrics", outputCol="inputWords")
+    words_df = spark.createDataFrame([(lyrics,)], ["lyrics"])
+    words = tokenizer.transform(words_df)
+
+    # Feature engineering (using TF-IDF)
+    hashingTF = HashingTF(inputCol="inputWords", outputCol="inputFeatures")
+    idf = IDF(inputCol="inputFeatures", outputCol="tfidf_features")
+    features = idf.fit(hashingTF.transform(words)).transform(hashingTF.transform(words))
+
+    # Predict genre
+    predictions = model.transform(features)
+    genre = predictions.select("predicted_genre").collect()[0][0]
+
+    return genre
+
 
 def predict(lyrics: str):
     try:
-        # Load the model using Spark's load method
-        model_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), os.path.join(os.getenv('MODEL_DIR'), os.getenv('MODEL_FILE')))
-        model = PipelineModel.load(model_path)
+        predicted_genre = classify_lyrics(lyrics)
+        print("Predicted Genre:", predicted_genre)
         
-        # Initialize Spark session
-        spark = SparkSession.builder.appName('MusicLyricsPredictor').getOrCreate()
-        
-        # spark_log_level = 'DEBUG' if os.getenv('FLASK_ENV') == 'development' else 'WARN'
-        # spark.sparkContext.setLogLevel(spark_log_level)
-        
-        # Create a DataFrame with the input lyrics (assuming 'lyrics' is the column expected by the model)
-        df = spark.createDataFrame([(lyrics,)], ['lyrics'])
-
-        # Predict
-        predictions = model.transform(df)
-        
-        # Convert numerical index to genre name
-        predicted_genre_index = predictions.select('prediction').collect()[0]['prediction']
-        genre_mapping_json = open(os.path.join(os.path.dirname(os.path.dirname(__file__)), os.path.join(os.getenv('MODEL_DIR'), os.getenv('GENRE_MAPPING_FILE'))), 'r')
-        genre_mapping = json.load(genre_mapping_json)
-        predicted_genre = genre_mapping.get(predicted_genre_index, "Unknown Genre")
-        
-        genre_mapping_json.close()
-
         return predicted_genre
     except Exception as e:
         print(e)

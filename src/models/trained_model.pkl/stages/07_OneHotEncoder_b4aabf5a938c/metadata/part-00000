@@ -1,1 +1,0 @@
-{"class":"org.apache.spark.ml.feature.OneHotEncoderModel","timestamp":1711290448960,"sparkVersion":"3.5.1","uid":"OneHotEncoder_b4aabf5a938c","paramMap":{"outputCol":"artist_nameVec","inputCol":"artist_nameIndex"},"defaultParamMap":{"dropLast":true,"outputCol":"OneHotEncoder_b4aabf5a938c__output","handleInvalid":"error"}}
