@@ -28,8 +28,10 @@ def train_model():
 @app.route('/predict', methods=['POST'])
 def predict_genre_from_lyrics():
     lyrics = request.form['lyrics']
+    prediction, chart_img = predict(lyrics)
     template_vars = {
-        'prediction': predict(lyrics),
+        'prediction': prediction,
+        'chart_img': chart_img,
         'lyrics': lyrics
     }
     

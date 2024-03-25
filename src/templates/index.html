@@ -23,6 +23,16 @@
         <button type="submit">Predict</button>
       </form>
     </section>
+
+    <script>
+      const form = document.querySelector("form");
+      const submitButton = document.querySelector("button");
+
+      form.addEventListener("submit", (event) => {
+        submitButton.textContent = "Running prediction...";
+        submitButton.disabled = true;
+      });
+    </script>
   </body>
 
   {% include 'footer.html' %}
