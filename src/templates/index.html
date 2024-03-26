@@ -31,6 +31,17 @@
       form.addEventListener("submit", (event) => {
         submitButton.textContent = "Running prediction...";
         submitButton.disabled = true;
+
+          const loaderContainer = document.createElement('div');
+          loaderContainer.className = 'loader-container';
+          const textarea = document.getElementById('lyrics');
+          textarea.parentNode.insertBefore(loaderContainer, textarea);
+          loaderContainer.appendChild(textarea);
+
+          // Create and show loader
+          const loader = document.createElement('div');
+          loader.className = 'loader';
+          loaderContainer.appendChild(loader);
       });
     </script>
   </body>
