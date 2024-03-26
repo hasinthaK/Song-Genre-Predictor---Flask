@@ -52,17 +52,14 @@ def classify_lyrics(lyrics):
     # Predict genre
     predictions = model.transform(features)
     genre = predictions.select("predicted_genre").collect()[0][0]
-    
     print(f'Prediction complete: Prediction: {genre}')
     
-    # TODO: get actual probabilities
-    genre_probabilities = {
-        'Rock': 0.3,
-        'Pop': 0.2,
-        'Hip Hop': 0.25,
-        'Electronic': 0.15,
-        'Jazz': 0.1
-    }
+    # Extract probabilities
+    probabilities = predictions.select("probability").collect()[0][0]
+    
+    # Map probabilities to genre labels
+    genre_labels = model.stages[-3].labels
+    genre_probabilities = {genre_labels[i]: float(probabilities[i]) for i in range(len(genre_labels))}
     
     chart_img = visualize(genre_probabilities)
 
