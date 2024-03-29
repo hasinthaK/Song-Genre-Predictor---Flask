@@ -51,8 +51,7 @@ def classify_lyrics(lyrics):
 
     # Predict genre
     predictions = model.transform(features)
-    genre = predictions.select("predicted_genre").collect()[0][0]
-    print(f'Prediction complete: Prediction: {genre}')
+    predicted_genre = predictions.select("predicted_genre").collect()[0][0]
     
     # Extract probabilities
     probabilities = predictions.select("probability").collect()[0][0]
@@ -62,8 +61,20 @@ def classify_lyrics(lyrics):
     genre_probabilities = {genre_labels[i]: float(probabilities[i]) for i in range(len(genre_labels))}
     
     chart_img = visualize(genre_probabilities)
+    
+    # Determine the most likely genre and its probability
+    max_probability = max(genre_probabilities.values())
+    predicted_genre = max(genre_probabilities, key=genre_probabilities.get)
+    
+    print(f'Prediction complete: Prediction: {predicted_genre}')
+    
+    # Threshold for determining unknown genre
+    threshold = 0.5
+    
+    if max_probability < threshold:
+        predicted_genre = "Unknown"
 
-    return genre, chart_img
+    return predicted_genre, chart_img
 
 
 def predict(lyrics: str):
