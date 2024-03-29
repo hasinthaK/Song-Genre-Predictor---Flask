@@ -32,7 +32,7 @@ def visualize(probabilites: dict):
 def classify_lyrics(lyrics):
     print('Loading model')
     # Load the model using Spark's load method
-    model_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), os.path.join(os.getenv('MODEL_DIR'), os.getenv('MODEL_FILE')))
+    model_path = os.path.join(os.getenv('MODEL_DIR'), os.getenv('MODEL_FILE'))
     model = PipelineModel.load(model_path)
     
     print('Model loaded & extracting features')
