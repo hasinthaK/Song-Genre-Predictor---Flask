@@ -1,5 +1,4 @@
 import os
-import json
 
 from pyspark.sql import SparkSession
 from pyspark.ml.feature import Tokenizer, StopWordsRemover, CountVectorizer, StringIndexer, IndexToString
@@ -13,7 +12,9 @@ def train():
         spark = SparkSession.builder.appName('MusicLyricsModel').getOrCreate()
 
         # Load your dataset
-        training_csv_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), os.path.join(os.getenv('TRAIN_DATA_DIR'), os.getenv('TRAIN_DATA_CSV')))
+        training_csv_path = os.path.join(os.getenv('TRAIN_DATA_DIR'), os.getenv('TRAIN_DATA_CSV'))
+        print(training_csv_path)
+        
         # Reading the data
         inputDF = spark.read.option("maxRowsInMemory", 1000000).csv(training_csv_path, inferSchema=True, header=True)
 
